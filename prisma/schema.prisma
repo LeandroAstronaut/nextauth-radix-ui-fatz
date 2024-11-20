@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,25 +7,364 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id Int @id @default(autoincrement())
-  name String
-  email String @unique
-  password String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  projects Project[]
+model accesos {
+  Id     Int     @id @default(autoincrement())
+  Acceso String? @db.VarChar(50)
+  Activo Int     @default(1)
 }
 
-model Project {
-  id Int @id @default(autoincrement())
-  title String
-  description String
+model ambientes {
+  Id       Int     @id @default(autoincrement())
+  Ambiente String? @db.VarChar(255)
+  Activo   Int     @default(1)
+}
 
-  userId Int
-  user User @relation(fields: [userId], references: [id])
+model aptitudes {
+  Id      Int     @id @default(autoincrement())
+  Aptitud String? @db.VarChar(255)
+  Activo  Int     @default(0)
+}
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model ciudades {
+  Id          Int     @id @default(autoincrement())
+  Ciudad      String? @db.VarChar(30)
+  ProvinciaId Int?
+  Activo      Int     @default(1)
+}
+
+model comodidadesyequipamiento {
+  Id                     Int     @id @default(autoincrement())
+  ComodidadYEquipamiento String? @db.VarChar(255)
+  Activo                 Int     @default(1)
+}
+
+model condicionespeciales {
+  Id                Int     @id @default(autoincrement())
+  CondicionEspecial String? @db.VarChar(255)
+  Activo            Int     @default(1)
+}
+
+model condicionespecialesloteocampo {
+  Id                          Int     @id @default(autoincrement())
+  CondicionEspecialLoteOCampo String? @db.VarChar(255)
+  Activo                      Int     @default(1)
+}
+
+model grupoarchivos {
+  Id          Int       @id @default(autoincrement())
+  UsuarioId   Int?
+  GrupoId     Int?
+  Url         String?   @db.VarChar(255)
+  Creado      DateTime? @default(now()) @db.Timestamp(6)
+  TipoArchivo String?   @db.VarChar(50)
+  Activo      Int       @default(1)
+}
+
+model grupoinmobiliarias {
+  Id             Int       @id @default(autoincrement())
+  GrupoId        Int?
+  InmobiliariaId Int?
+  Creado         DateTime? @default(now()) @db.Timestamp(6)
+  Actualizado    DateTime? @db.Timestamp(6)
+  Aprobado       Int       @default(1)
+  Activo         Int       @default(1)
+}
+
+model grupopropiedades {
+  Id          Int       @id @default(autoincrement())
+  GrupoId     Int?
+  PropiedadId Int?
+  Creado      DateTime? @default(now()) @db.Timestamp(6)
+  Actualizado DateTime? @db.Timestamp(6)
+  Activo      Int       @default(1)
+}
+
+model grupos {
+  Id               Int       @id @default(autoincrement())
+  NombreGrupo      String?   @db.VarChar(255)
+  DescripcionGrupo String?   @db.VarChar(255)
+  Creado           DateTime? @default(now()) @db.Timestamp(6)
+  Actualizado      DateTime? @db.Timestamp(6)
+  Activo           Int       @default(1)
+}
+
+model inmobiliarias {
+  Id             Int       @id @default(autoincrement())
+  Inmobiliaria   String?   @db.VarChar(255)
+  Titular        String?   @default("") @db.VarChar(100)
+  Tomo           String?   @db.VarChar(50)
+  Folio          String?   @db.VarChar(50)
+  Matricula      String?   @db.VarChar(50)
+  Colegio        String?   @db.VarChar(100)
+  ZonaInfluencia String?   @db.VarChar(255)
+  Logo           String?   @db.VarChar(255)
+  Email          String?   @db.VarChar(255)
+  Telefono       BigInt?
+  Creado         DateTime? @default(now()) @db.Timestamp(6)
+  Actualizado    DateTime? @db.Timestamp(6)
+  Activo         Int       @default(1)
+}
+
+model mensajes {
+  Id             Int       @id @default(autoincrement())
+  Creado         DateTime? @default(now()) @db.Timestamp(6)
+  ClienteId      Int?
+  RemitenteId    Int?
+  DestinatarioId Int?
+  InmobiliariaId Int?
+  PropiedadId    Int?
+  GrupoId        Int?
+  Mensaje        String?
+  UrlArchivo     String?   @db.VarChar(255)
+  TipoArchivo    String?   @db.VarChar(50)
+  Activo         Int       @default(1)
+}
+
+model novedades {
+  Id               Int       @id @default(autoincrement())
+  TituloNovedad    String?   @db.VarChar(255)
+  SubtituloNovedad String?   @db.VarChar(255)
+  ImagenNovedad    String?   @db.VarChar(255)
+  TextoNovedad     String?
+  MostrarEnPublico Int       @default(1)
+  MostrarEnRed     Int       @default(1)
+  Activo           Int       @default(1)
+  Creado           DateTime? @db.Timestamp(6)
+}
+
+model paises {
+  Id     Int     @id @default(autoincrement())
+  Pais   String? @db.VarChar(50)
+  Activo Int     @default(1)
+}
+
+model propiedadarchivos {
+  Id             Int       @id @default(autoincrement())
+  PropiedadId    Int?
+  Creado         DateTime? @default(now()) @db.Timestamp(6)
+  Activo         Int       @default(1)
+  NombreArchivo  String?   @db.VarChar(255)
+  Url            String?   @db.VarChar(255)
+  MostrarEnRed   Int       @default(1)
+  MostrarEnGrupo Int       @default(1)
+}
+
+model propiedades {
+  Id                                 Int       @id @default(autoincrement())
+  TokkoId                            Int?
+  InmobiliariaId                     Int?
+  TipoOperacionId                    Int?
+  Creado                             DateTime  @default(now()) @db.Timestamp(6)
+  Actualizado                        DateTime? @db.Timestamp(6)
+  FotoPortada                        String    @default("") @db.VarChar(255)
+  PrecioMonedaId                     Int?
+  Precio                             Int?
+  PrecioConsultar                    Int       @default(0)
+  PrecioSoloParaRed                  Int       @default(0)
+  AptoCredito                        Int       @default(0)
+  Oferta                             Int?
+  Titulo                             String?   @db.VarChar(255)
+  TipoPropiedadId                    Int?
+  Calle                              String?   @db.VarChar(255)
+  Altura                             Int?
+  Piso                               Int?
+  Departamento                       String?   @db.VarChar(20)
+  CiudadId                           Int?
+  Direccion                          String?   @db.VarChar(255)
+  ProvinciaId                        Int?
+  PaisId                             Int?
+  Dormitorios                        Int?
+  Ambientes                          Int?
+  Disposicion                        String?   @db.VarChar(50)
+  Orientacion                        String?   @db.VarChar(50)
+  Cocheras                           Int?
+  Banos                              Int?
+  Antiguedad                         Int?
+  AnosAntiguedad                     Int?
+  UnidadSuperficie                   String?   @db.VarChar(10)
+  SuperficieCubierta                 Decimal?  @db.Decimal(10, 2)
+  SuperficieTotal                    Decimal?  @db.Decimal(10, 2)
+  SuperficieBalcon                   Decimal?  @db.Decimal(10, 2)
+  SuperficieDescubierta              Decimal?  @db.Decimal(10, 2)
+  FrenteTerreno                      Int?
+  LargoTerreno                       Int?
+  Descripcion                        String?
+  DescripcionRica                    String?
+  Latitud                            String    @default("") @db.VarChar(50)
+  Longitud                           String    @default("") @db.VarChar(50)
+  ExpensasMonedaId                   Int?
+  Expensas                           Decimal?  @db.Decimal(10, 2)
+  ExpensasConsultar                  Int       @default(0)
+  ExpensasSoloParaRed                Int       @default(0)
+  ValorPorHaMonedaId                 Int?
+  ValorPorHa                         Decimal?  @db.Decimal(10, 2)
+  ValorPorHaConsultar                Int       @default(0)
+  ValorPorHaSoloParaRed              Int       @default(0)
+  Condicion                          Int?
+  Situacion                          Int?
+  Activo                             Int       @default(1)
+  Mejoras                            String?
+  Transporte                         String?
+  PisosCantidad                      Int?
+  Techo                              String?   @db.VarChar(20)
+  SeguridadIds                       String?   @db.VarChar(255)
+  AmbientesIds                       String?   @db.VarChar(255)
+  ComodidadesYEquipamientoIds        String?   @db.VarChar(255)
+  CondicionesEspecialesIds           String?   @db.VarChar(255)
+  CondicionesEspecialesLoteOCampoIds String?   @db.VarChar(255)
+  AptitudesId                        String?   @db.VarChar(255)
+  OtraAptitud                        String?   @db.VarChar(255)
+  AccesosIds                         String?   @db.VarChar(255)
+  ServiciosIds                       String?   @db.VarChar(255)
+  ServiciosEnDesarrolloIds           String?   @db.VarChar(255)
+  EstadoEmprendimiento               String?   @db.VarChar(255)
+  FechaEntregaEmprendimiento         DateTime? @db.Date
+  PublicarEnPublico                  Int       @default(1)
+  PublicarEnRed                      Int       @default(1)
+  MostrarDataRed                     Int       @default(1)
+  MostrarDataGrupo                   Int       @default(1)
+}
+
+model propiedadesdatagrupo {
+  PropiedadId      Int
+  Creado           DateTime  @default(now()) @db.Timestamp(6)
+  Actualizado      DateTime? @db.Timestamp(6)
+  NecesitaArreglos Int       @default(0)
+  Id               Int       @id @default(autoincrement())
+}
+
+model propiedadesdatainmobiliaria {
+  PropiedadId         Int
+  Creado              DateTime  @default(now()) @db.Timestamp(6)
+  Actualizado         DateTime? @db.Timestamp(6)
+  NombrePropietario   String    @default("") @db.VarChar(50)
+  ApellidoPropietario String?   @db.VarChar(50)
+  TelefonoPropietario String?   @db.VarChar(50)
+  Id                  Int       @id @default(autoincrement())
+}
+
+model propiedadesdatared {
+  PropiedadId                 Int
+  Creado                      DateTime  @default(now()) @db.Timestamp(6)
+  Actualizado                 DateTime? @db.Timestamp(6)
+  NotasRed                    String
+  NotasAutorizacioDeVenta     String?
+  AutorizacionFirmada         Int?
+  DocumentacionEscriturar     Int?
+  ConHipoteca                 Int?
+  EnSucesion                  Int?
+  TitularPersonaFisica        Int?
+  TitularSociedadOFideicomiso Int?
+  AutorizacionDeVenta         Int?
+  CopiaDeEscritura            Int?
+  CopiaDePlanos               Int?
+  CedulaCatastral             Int?
+  TieneComisionCompartida     Int?
+  ComisionCompartida          Decimal?  @db.Decimal(10, 2)
+  SituacionYAvances           String?
+  Id                          Int       @id @default(autoincrement())
+}
+
+model propiedadfotos {
+  Id          Int       @id @default(autoincrement())
+  PropiedadId Int?
+  Url         String?   @db.VarChar(255)
+  Creado      DateTime? @default(now()) @db.Timestamp(6)
+  Activo      Int?      @default(1)
+}
+
+model propiedadplanos {
+  Id          Int       @id @default(autoincrement())
+  PropiedadId Int?
+  Url         String?   @db.VarChar(255)
+  Creado      DateTime? @default(now()) @db.Timestamp(6)
+  Activo      Int?      @default(1)
+}
+
+model propiedadrecorridos360 {
+  Id          Int       @id @default(autoincrement())
+  PropiedadId Int?
+  Url         String?   @db.VarChar(255)
+  Creado      DateTime? @default(now()) @db.Timestamp(6)
+  Activo      Int?      @default(1)
+}
+
+model propiedadvideos {
+  Id          Int       @id @default(autoincrement())
+  PropiedadId Int?
+  Url         String?   @db.VarChar(255)
+  Creado      DateTime? @default(now()) @db.Timestamp(6)
+  Activo      Int?      @default(1)
+}
+
+model provincias {
+  Id        Int     @id @default(autoincrement())
+  Provincia String? @db.VarChar(50)
+  PaisId    Int?
+  Activo    Int?
+}
+
+model roles {
+  Id  Int     @id @default(autoincrement())
+  Rol String? @db.VarChar(50)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model seguridad {
+  Id        Int
+  Seguridad String @default("") @db.VarChar(255)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model servicios {
+  Id       Int
+  Servicio String? @db.VarChar(255)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model subtipospropiedad {
+  Id               Int
+  TipoPropiedadId  Int?
+  SubtipoPropiedad String? @db.VarChar(255)
+  Activo           Int?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model tiposoperacion {
+  Id            Int
+  TipoOperacion String? @db.VarChar(20)
+  Activo        Int?    @default(1)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model tipospropiedad {
+  Id            Int
+  TipoPropiedad String? @db.VarChar(30)
+  Activo        Int?
+
+  @@ignore
+}
+
+model usuarios {
+  Id                Int       @id @default(autoincrement())
+  InmobiliariaId    Int?
+  RolId             Int?
+  Nombre            String    @default("") @db.VarChar(100)
+  Apellido          String?   @db.VarChar(100)
+  Email             String    @unique(map: "email_unique ") @default("") @db.VarChar(100)
+  Clave             String?   @db.VarChar(60)
+  Avatar            String    @default("user.jpg") @db.VarChar(250)
+  Creado            DateTime  @default(now()) @db.Timestamp(6)
+  Actualizado       DateTime? @db.Timestamp(6)
+  FechaDeNacimiento DateTime? @db.Date
+  Telefono          String?   @db.VarChar(50)
+  Activo            Int       @default(1)
 }
